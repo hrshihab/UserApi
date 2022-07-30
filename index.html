@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Api</title>
+  <style>
+    h1{
+      color: salmon;
+    }
+    h1,h3,h4{
+      line-height: 50%;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" onfocus="this.value=''" name="" id="inputArea" placeholder="Enter user number.."><button id="loadBtn">Load User</button>
+  <div id="users">
+  </div>
+  <div id="user-detail">
+
+  </div>
+<script>
+
+
+document.getElementById('loadBtn').addEventListener('click',function(){
+  const input = document.getElementById('inputArea').value;
+  const inputNumber = parseInt(input);
+
+  fetch("https://jsonplaceholder.typicode.com/users")
+  .then(res => res.json())
+  .then(data => {
+    data = data.slice(0,inputNumber); 
+      const users = document.getElementById('users');
+      users.innerHTML= "";
+      for (let index = 0; index < inputNumber; index++) {
+        const user = data[index];
+        const p = document.createElement('p');
+         p.innerHTML = `
+         <p class="userStyle">
+         <strong> ${user.name}</strong>
+         <button onclick="getUserDetail(${user.id})">Get Details ${user.id}</button>
+         </p>
+         `
+        users.appendChild(p);        
+      }
+  })
+})
+
+
+
+
+
+  function getUserDetail(userId){
+        fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+        .then(res => res.json())
+        .then(data => 
+        {
+          const detail = document.getElementById('user-detail');
+          detail.innerHTML = "";
+          const p = document.createElement('p');
+          p.innerHTML =
+          
+          `
+            <h1 >User ${userId} Details</h1>
+            <h3>Name : ${data.name}</h3>
+            <h4>ID : ${data.id}</h4>
+            <h4>Email : ${data.email}</h4>
+            <h4>Phone : ${data.phone}</h4>
+      
+
+          ` 
+          detail.appendChild(p);
+      
+
+
+        });
+      }
+</script>
+
+</body>
+</html>
